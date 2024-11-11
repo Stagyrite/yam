@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Yet Another Minesweeper</title>
+</head>
+<body onLoad="runGame()">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Minesweeper</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Game
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="javascript:menu.newGame()">New</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="javascript:menu.setLevel(Menu.LEVEL_BEGINNER)">
+                        <span id="dropdown-item-beginner">☑️ Beginner</span>
+                    </a>
+                    <a class="dropdown-item" href="javascript:menu.setLevel(Menu.LEVEL_INTERMEDIATE)">
+                        <span id="dropdown-item-intermediate">Intermediate</span>
+                    </a>
+                    <a class="dropdown-item" href="javascript:menu.setLevel(Menu.LEVEL_EXPERT)">
+                        <span id="dropdown-item-expert">Expert</span>
+                    </a>
+                    <a class="dropdown-item" data-toggle="modal" data-target="#minesweeper-custom" href="#">
+                        <span id="dropdown-item-custom">Custom...</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="javascript:menu.toggleMarks()">
+                        <span id="dropdown-item-marks">Marks (?)</span>
+                    </a>
+                    <a class="dropdown-item" href="javascript:menu.toggleColors()">
+                        <span id="dropdown-item-colors">☑️ Color</span>
+                    </a>
+                    <a class="dropdown-item" href="javascript:menu.toggleSound()">
+                        <span id="dropdown-item-sound">Sound</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a id="best-times-button" class="dropdown-item" data-toggle="modal"
+                       data-target="#minesweeper-best-times" href="#">Best Times...</a>
+
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="https://github.com/Stagyrite/yam">Exit</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarHelpDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Help
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarHelpDropdown">
+                    <a class="dropdown-item" data-toggle="modal" data-target="#minesweeper-help" href="#">Contents</a>
+                    <a class="dropdown-item" data-toggle="modal" data-target="#minesweeper-help-keywords" href="#">Search
+                        for Help on...</a>
+                    <a class="dropdown-item" data-toggle="modal" data-target="#minesweeper-using-help" href="#">Using
+                        Help</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" data-toggle="modal" data-target="#minesweeper-about" href="#">About
+                        Minesweeper</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div id="board-container">
+    <table style="background-color: navy; color: white">
+        <colgroup>
+            <col width="33%"/>
+            <col width="34%"/>
+            <col width="33%"/>
+        </colgroup>
+        <tr>
+            <td style="text-align: center">
+                <span id="bigNum"></span>
+                <span id="midNum"></span>
+                <span id="lowNum"></span>
+            </td>
+            <td style="text-align: center">
+                <span id="smile" onClick="runGame()"></span>
+            </td>
+            <td style="text-align: center">
+                <span id="largestDigit"></span>
+                <span id="secondDigit"></span>
+                <span id="lastDigit"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" id="table_container"></td>
+        </tr>
+    </table>
+</div>
+
+<div class="modal fade" id="minesweeper-help" tabindex="-1" role="dialog" aria-labelledby="minesweeper-help-title"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="minesweeper-help-title">Minesweeper</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Minesweeper overview</h6>
+                <p>The object of Minesweeper is to locate all the mines as quickly as possible without uncovering any of
+                    them. If you uncover a mine, you lose the game.</p>
+
+                <h6>Play Minesweeper</h6>
+                <p>To play Minesweeper</p>
+
+                <ol>
+                    <li>On the Game menu, click New.</li>
+                    <li>To start the timer, click any square on the playing field.</li>
+                </ol>
+
+                <p>Notes</p>
+
+                <ul>
+                    <li>You can uncover a square by clicking it. If you uncover a mine, you lose the game.</li>
+                    <li>If a number appears on a square, it indicates how many mines are in the eight squares that
+                        surround the numbered one.
+                    </li>
+                    <li>To mark a square you suspect contains a mine, right-click it.</li>
+                    <li>The game area consists of the playing field, a mine counter, and a timer.</li>
+                </ul>
+
+                <h6>Customize the playing field</h6>
+                <p>To customize the playing field</p>
+
+                <ol>
+                    <li>On the Game menu, click Custom.</li>
+                    <li>Customize the size of the field by specifying the number of squares to display vertically and
+                        horizontally, and specify the number of mines to place on the field.
+                    </li>
+                </ol>
+
+                <h6>Strategies and tips</h6>
+                <ul>
+                    <li>If you are uncertain about a square, right-click it twice to mark it with a question mark (?).
+                        Later, you can either mark the square as a mine or remove the markings by right-clicking the
+                        square again once or twice.
+                    </li>
+                    <li>If you have marked all the mines around a numbered square, you can uncover the remaining squares
+                        around it by clicking the numbered square with the left and right mouse buttons simultaneously.
+                        If not all mines surrounding the numbered square have been marked, the remaining covered or
+                        unmarked squares will appear to be depressed (or flash) when the numbered square is clicked with
+                        both buttons simultaneously.
+                    </li>
+                    <li>Look for common patterns in numbers, which often indicate a corresponding pattern of mines. For
+                        example, the pattern 2-3-2 at the edge of a group of uncovered squares indicates a row of three
+                        mines next to the three numbers.
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="minesweeper-help-keywords" tabindex="-1" role="dialog"
+     aria-labelledby="minesweeper-help-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="minesweeper-help-keywords-title">Minesweeper</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Index</h6>
+
+                <ol>
+                    <li><a href="#customizing-playing-field">customizing playing field</a></li>
+                    <li><a href="#play-minesweeper">hints and tips</a></li>
+                    <li><a href="#strategies-and-tips">hints and tips</a></li>
+                    <li><a href="#play-minesweeper">how to play</a></li>
+                    <li><a href="#play-minesweeper">marking suspected squares</a></li>
+                    <li><a href="#strategies-and-tips">marking suspected squares</a></li>
+                    <li><a href="#play-minesweeper">new games</a></li>
+                    <li><a href="#play-minesweeper">numbered squares</a></li>
+                    <li><a href="#minesweeper-overview">object of the game</a></li>
+                    <li><a href="#play-minesweeper">playing the game</a></li>
+                    <li><a href="#customizing-playing-field">setting up playing field</a></li>
+                    <li><a href="#strategies-and-tips">strategies</a></li>
+                    <li><a href="#strategies-and-tips">timer</a></li>
+                    <li><a href="#minesweeper-overview">winning</a></li>
+                </ol>
+
+                <a name="minesweeper-overview"></a>
+                <h6>Minesweeper overview</h6>
+                <p>The object of Minesweeper is to locate all the mines as quickly as possible without uncovering any of
+                    them. If you uncover a mine, you lose the game.</p>
+
+                <a name="play-minesweeper"></a>
+                <h6>Play Minesweeper</h6>
+                <p>To play Minesweeper</p>
+
+                <ol>
+                    <li>On the Game menu, click New.</li>
+                    <li>To start the timer, click any square on the playing field.</li>
+                </ol>
+
+                <p>Notes</p>
+
+                <ul>
+                    <li>You can uncover a square by clicking it. If you uncover a mine, you lose the game.</li>
+                    <li>If a number appears on a square, it indicates how many mines are in the eight squares that
+                        surround the numbered one.
+                    </li>
+                    <li>To mark a square you suspect contains a mine, right-click it.</li>
+                    <li>The game area consists of the playing field, a mine counter, and a timer.</li>
+                </ul>
+
+                <a name="customizing-playing-field"></a>
+                <h6>Customize the playing field</h6>
+                <p>To customize the playing field</p>
+
+                <ol>
+                    <li>On the Game menu, click Custom.</li>
+                    <li>Customize the size of the field by specifying the number of squares to display vertically and
+                        horizontally, and specify the number of mines to place on the field.
+                    </li>
+                </ol>
+
+                <a name="strategies-and-tips"></a>
+                <h6>Strategies and tips</h6>
+                <ul>
+                    <li>If you are uncertain about a square, right-click it twice to mark it with a question mark (?).
+                        Later, you can either mark the square as a mine or remove the markings by right-clicking the
+                        square again once or twice.
+                    </li>
+                    <li>If you have marked all the mines around a numbered square, you can uncover the remaining squares
+                        around it by clicking the numbered square with the left and right mouse buttons simultaneously.
+                        If not all mines surrounding the numbered square have been marked, the remaining covered or
+                        unmarked squares will appear to be depressed (or flash) when the numbered square is clicked with
+                        both buttons simultaneously.
+                    </li>
+                    <li>Look for common patterns in numbers, which often indicate a corresponding pattern of mines. For
+                        example, the pattern 2-3-2 at the edge of a group of uncovered squares indicates a row of three
+                        mines next to the three numbers.
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="minesweeper-using-help" tabindex="-1" role="dialog"
+     aria-labelledby="minesweeper-using-help-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="minesweeper-using-help-title">Using Help</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>The help is always there for you in the Help menu.</p>
+                <p>There are two options available:</p>
+                <ul>
+                    <li>Contents</li>
+                    <li>Search for Help on...</li>
+                </ul>
+                <p>Click on the Close button below to finish.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="minesweeper-about" tabindex="-1" role="dialog" aria-labelledby="minesweeper-about-title"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="minesweeper-about-title">About Minesweeper</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This version of Minesweeper originates from a project that I've been on during my studies at the
+                    University of Wrocław.</p>
+                <p>Minesweeper is a widely known game available on a variety of Microsoft Windows operating systems,
+                    including the early version.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="minesweeper-custom" tabindex="-1" role="dialog" aria-labelledby="minesweeper-custom-title"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="minesweeper-custom-title">Custom Field</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 mt-3">
+                    <label for="minesweeper_custom_height" class="form-label">Height:</label>
+                    <input type="number" min="9" max="24" step="1" class="form-select" aria-label=""
+                           name="minesweeper_custom_height" id="minesweeper_custom_height"/>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="minesweeper_custom_width" class="form-label">Width:</label>
+                    <input type="number" min="9" max="30" step="1" class="form-select" aria-label=""
+                           name="minesweeper_custom_width" id="minesweeper_custom_width"/>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label for="minesweeper_custom_mines" class="form-label">Mines:</label>
+                    <input type="number" min="10" max="667" step="1" class="form-select" aria-label=""
+                           name="minesweeper_custom_mines" id="minesweeper_custom_mines"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        onClick="menu.setLevel(Menu.LEVEL_CUSTOM)">OK
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        onClick="menu.game.config.refreshCustom()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="minesweeper-best-times" tabindex="-1" role="dialog"
+     aria-labelledby="minesweeper-best-times-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="minesweeper-best-times-title">Fastest Mine Sweepers</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th scope="col">Difficulty</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Beginner</td>
+                        <td id="best_time_0">999 seconds</td>
+                        <td id="best_player_0">Anonymous</td>
+                    </tr>
+                    <tr>
+                        <td>Intermediate</td>
+                        <td id="best_time_1">999 seconds</td>
+                        <td id="best_player_1">Anonymous</td>
+                    </tr>
+                    <tr>
+                        <td>Expert</td>
+                        <td id="best_time_2">999 seconds</td>
+                        <td id="best_player_2">Anonymous</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onClick="menu.resetScores()">Reset Scores</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="minesweeper-won" tabindex="-1" role="dialog" aria-labelledby="minesweeper-won-title"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>You have the fastest time for beginner level.</p>
+                <p>Please enter your name.</p>
+                <p><input type="text" class="form-control" aria-label="" name="minesweeper_player"
+                          id="minesweeper_player" value="Anonymous" maxlength="32"/></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick="menu.confirmWon()">OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script src="yam.js"></script>
+</body>
+</html>
