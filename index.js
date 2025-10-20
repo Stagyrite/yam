@@ -96,6 +96,8 @@ class Menu {
         this.game = new Game(this.newConfig());
         this.game.drawAllBlocks();
         this.game.addAndDisplayLeftFlags(0);
+        Windowing.displayGlyph('smile', '🙂');
+        this.game.timer.displayTimerSeconds();
     }
 
 }
@@ -269,7 +271,6 @@ class Board {
         let block = this.board.find(block => !block.bomb);
 
         if (!block.bomb) {
-            // XXX works when not found?
             block.bomb = true;
             return true;
         }
@@ -471,6 +472,8 @@ class Game {
     replaceFirstNonBomb(point) {
 
         if (this.board.replaceFirstNonBomb()) {
+            let firstBlock = this.board.getBlock(point);
+            firstBlock.bomb = false;
             this.expandEmptyBlock(point);
         }
 
@@ -625,6 +628,10 @@ class Config {
 }
 
 function runGame() {
-    menu = new Menu();
+
+    if (typeof menu === 'undefined') {
+        menu = new Menu();
+    }
+
     menu.newGame();
 }
