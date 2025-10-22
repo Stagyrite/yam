@@ -607,12 +607,10 @@ class Config {
     }
 
     newPoint(column, row) {
-        let index = column * this.rows + row;
-        let point;
+        let point = null;
 
-        if (index < 0 || index > this.rows * this.columns) {
-            point = null;
-        } else {
+        if (row >= 0 && row < this.rows && column >= 0 && column < this.columns) {
+            let index = row * this.columns + column;
             point = new BoardPoint(column, row, index);
         }
 
