@@ -555,8 +555,13 @@ class Game {
         }
 
         if (!this.finished) {
-            Windowing.displayGlyph('smile', '🙂');
-            this.handleNormalBlockClick(point);
+            let block = this.board.getBlock(point);
+
+            if (!block.flag) {
+                Windowing.displayGlyph('smile', '🙂');
+                this.handleNormalBlockClick(point);
+            }
+
         }
 
     }
