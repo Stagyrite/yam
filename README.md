@@ -4,6 +4,8 @@
 
 Go to [Stagyrite.GitHub.io/yam](https://stagyrite.github.io/yam/ "Yet Another Minesweeper"), and the game is all for you.
 
+[![screenshot](screenshot.png)](https://stagyrite.github.io/yam/ "Yet Another Minesweeper")
+
 ## Minesweeper overview
 
 The object of Minesweeper is to locate all the mines as quickly as possible without uncovering any of them. If you uncover a mine, you lose the game.

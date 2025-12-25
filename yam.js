@@ -266,7 +266,7 @@ class Timer {
 
     displayTimerSeconds() {
         let largestDigit = Math.trunc(this.timerSeconds / 100);
-        let secondDigit = Math.trunc(this.timerSeconds / 10);
+        let secondDigit = Math.trunc(this.timerSeconds / 10) % 10;
         let lastDigit = this.timerSeconds % 10;
         Windowing.displayGlyph('largestDigit', largestDigit);
         Windowing.displayGlyph('secondDigit', secondDigit);
